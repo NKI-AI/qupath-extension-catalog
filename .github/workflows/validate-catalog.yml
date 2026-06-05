@@ -1,0 +1,40 @@
+# Validates catalog.json against the QuPath extension-catalog-model schema.
+
+name: validate-catalog
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out extension-catalog-model
+        uses: actions/checkout@v4
+        with:
+          repository: qupath/extension-catalog-model
+          path: extension-catalog-model
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install extension-catalog-model
+        run: pip install ./extension-catalog-model
+
+      - name: Check out this repository
+        uses: actions/checkout@v4
+
+      - name: Validate catalog.json
+        shell: python
+        run: |
+          from extension_catalog_model.model import Catalog
+
+          with open("catalog.json") as f:
+              Catalog.model_validate_json(f.read())
+          print("catalog.json is valid")

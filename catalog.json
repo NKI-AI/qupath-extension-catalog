@@ -1,0 +1,21 @@
+{
+    "name": "AI for Oncology QuPath catalog",
+    "description": "QuPath extensions maintained by the AI for Oncology group (NKI-AI)",
+    "extensions": [
+        {
+            "name": "QuPath FastSlide extension",
+            "description": "QuPath extension for reading whole-slide images via FastSlide",
+            "author": "AI for Oncology (NKI-AI)",
+            "homepage": "https://github.com/NKI-AI/qupath-extension-fastslide",
+            "releases": [
+                {
+                    "name": "v0.1.0",
+                    "main_url": "https://github.com/NKI-AI/qupath-extension-fastslide/releases/download/v0.1.0/qupath-extension-fastslide-fat-0.1.0.jar",
+                    "version_range": {
+                        "min": "v0.6.0"
+                    }
+                }
+            ]
+        }
+    ]
+}
