@@ -33,7 +33,30 @@ jobs:
       - name: Validate catalog.json
         shell: python
         run: |
+          import re
+          import requests
+          import extension_catalog_model.model as model
           from extension_catalog_model.model import Catalog
+
+          # Upstream bug workaround: the packaged _validate_primary_url uses the
+          # regex ^/[0-9a-zA-Z]+/[0-9a-zA-Z]+ which rejects GitHub owners/repos
+          # containing '-', '_' or '.' (e.g. the "NKI-AI" org). QuPath's own
+          # extension-manager (Utils.checkGithubURI) only checks host==github.com,
+          # so we relax the path regex to match real GitHub naming while keeping
+          # the https / host / live-200 checks intact.
+          # See https://github.com/qupath/extension-catalog-model
+          _GITHUB_REPO_PATH = re.compile(r"^/[0-9A-Za-z._-]+/[0-9A-Za-z._-]+")
+
+          def _validate_primary_url(url):
+              assert url.scheme == "https", "URLs must use https"
+              assert url.host == "github.com", "Primary URLs must be hosted on github.com"
+              assert _GITHUB_REPO_PATH.match(url.path) is not None, \
+                  "Primary URLs must point to a github.com/<owner>/<repo> path"
+              code = requests.get(str(url)).status_code
+              assert code == 200, f"URL request returns {code} for {url}"
+              return url
+
+          model._validate_primary_url = _validate_primary_url
 
           with open("catalog.json") as f:
               Catalog.model_validate_json(f.read())
