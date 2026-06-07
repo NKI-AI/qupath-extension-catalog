@@ -21,6 +21,13 @@
                     "version_range": {
                         "min": "v0.6.0"
                     }
+                },
+                {
+                    "name": "v0.1.2",
+                    "main_url": "https://github.com/NKI-AI/qupath-extension-fastslide/releases/download/v0.1.2/qupath-extension-fastslide-fat-0.1.2.jar",
+                    "version_range": {
+                        "min": "v0.6.0"
+                    }
                 }
             ]
         }
